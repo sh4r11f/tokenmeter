@@ -147,3 +147,14 @@ public struct SettingsInstaller {
         }
     }
 }
+
+public extension SettingsInstaller {
+    /// Used when the bundled Resources/statusline.sh can't be found on
+    /// disk (e.g. running via `swift run` instead of the packaged .app).
+    /// Kept in sync with Resources/statusline.sh by the build script,
+    /// which copies the real file into the .app bundle.
+    static let fallbackStatuslineScript = """
+    #!/usr/bin/env bash
+    echo "TokenMeter: bundled statusline.sh missing; reinstall the app" >&2
+    """
+}
