@@ -1,0 +1,9 @@
+{
+  "uuid": "tokenmeter@sh4r11f.github.io",
+  "name": "TokenMeter",
+  "description": "Shows your Claude Code subscription rate-limit usage (5-hour and 7-day windows) in the top bar. Reads a local snapshot written by Claude Code's statusLine hook — no network access.",
+  "shell-version": ["48", "49", "50"],
+  "url": "https://github.com/sh4r11f/tokenmeter",
+  "settings-schema": "org.gnome.shell.extensions.tokenmeter",
+  "version-name": "1.0.0"
+}

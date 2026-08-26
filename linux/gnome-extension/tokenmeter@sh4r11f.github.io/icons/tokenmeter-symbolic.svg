@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TokenMeter symbolic icon: a half-gauge with a needle, built from
+     filled paths only (no strokes) so GNOME Shell's symbolic recoloring
+     applies cleanly. #bebebe is the conventional symbolic base color the
+     shell replaces with the theme foreground. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- Half-ring gauge body: outer arc radius 6, inner arc radius 4.25,
+       centered at (8, 11). -->
+  <path fill="#bebebe" d="M 2 11 A 6 6 0 0 1 14 11 L 12.25 11 A 4.25 4.25 0 0 0 3.75 11 Z"/>
+  <!-- Needle: a thin bar from the hub toward the upper right (~"70%"). -->
+  <path fill="#bebebe" d="M 7.55 10.55 L 11.6 6.5 L 12.5 7.4 L 8.45 11.45 Z"/>
+  <!-- Hub. -->
+  <circle fill="#bebebe" cx="8" cy="11" r="1.4"/>
+</svg>

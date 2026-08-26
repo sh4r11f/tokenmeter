@@ -64,6 +64,21 @@ final class SettingsInstallerTests: XCTestCase {
         XCTAssertEqual(perms & 0o111, 0o111, "script should be executable")
     }
 
+    func testBackupIsOwnerOnly() throws {
+        try """
+        {"model": "sonnet"}
+        """.write(to: settingsURL, atomically: true, encoding: .utf8)
+        let installer = makeInstaller()
+
+        _ = try installer.install(statuslineScriptContents: "#!/bin/sh\n")
+
+        let backups = try FileManager.default.contentsOfDirectory(at: backupDir, includingPropertiesForKeys: nil)
+            .filter { $0.lastPathComponent.hasPrefix("settings.json.bak-") }
+        XCTAssertEqual(backups.count, 1)
+        let perms = try FileManager.default.attributesOfItem(atPath: backups[0].path)[.posixPermissions] as! Int
+        XCTAssertEqual(perms & 0o777, 0o600, "settings backups can contain secrets and must be owner-only")
+    }
+
     func testSecondInstallIsAlreadyInstalled() throws {
         let installer = makeInstaller()
         _ = try installer.install(statuslineScriptContents: "#!/bin/sh\n")

@@ -1,0 +1,33 @@
+/* TokenMeter top-bar styling. Colors match the mac app's thresholds
+ * (normal = theme default, >=50% yellow, >80% red) using GNOME palette
+ * shades that stay readable on the dark top bar. Staleness and unknown
+ * states dim via opacity so they respect any shell theme. */
+
+.tokenmeter-label {
+    /* Tabular figures stop the label width jittering as digits change. */
+    font-feature-settings: "tnum";
+}
+
+.tokenmeter-warning {
+    color: #f6d32d; /* GNOME palette yellow 3 */
+}
+
+.tokenmeter-critical {
+    color: #ff7b63; /* GNOME palette red 1 — readable on dark bar */
+}
+
+/* "Unknown" states (not installed / no data / unreadable). */
+.tokenmeter-dim {
+    opacity: 0.6;
+}
+
+/* Snapshot older than the 2-minute freshness window. */
+.tokenmeter-stale {
+    opacity: 0.55;
+}
+
+/* Secondary/explanatory lines inside the popup menu. */
+.tokenmeter-menu-dim {
+    opacity: 0.7;
+    font-size: 0.9em;
+}

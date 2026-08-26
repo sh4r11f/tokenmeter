@@ -27,12 +27,20 @@ run_case() {
     echo "$fake_home"
 }
 
+# Portable permission read (GNU stat on Linux, BSD stat on macOS).
+perms_of() {
+    stat -c %a "$1" 2>/dev/null || stat -f %Lp "$1"
+}
+
 echo "--- full payload ---"
 home="$(run_case scripts/fixtures/full-payload.json)"
 status_file="$home/.claude/tokenmeter/status.json"
 assert_field "$status_file" '.rate_limits.five_hour.used_percentage' "42.3" "five_hour used_percentage"
 assert_field "$status_file" '.rate_limits.seven_day.used_percentage' "18.1" "seven_day used_percentage"
-grep -q "5h: 42%" "$home/stdout.txt" && echo "ok: stdout contains 5h summary" || { echo "FAIL: stdout missing 5h summary"; FAIL=1; }
+grep -q "5h: 42% · 7d: 18%" "$home/stdout.txt" && echo "ok: stdout shows both windows with · separator" || { echo "FAIL: stdout separator wrong: $(cat "$home/stdout.txt")"; FAIL=1; }
+# The snapshot dir also stores settings backups — both must be owner-only.
+[ "$(perms_of "$home/.claude/tokenmeter")" = "700" ] && echo "ok: data dir is 700" || { echo "FAIL: data dir perms $(perms_of "$home/.claude/tokenmeter")"; FAIL=1; }
+[ "$(perms_of "$status_file")" = "600" ] && echo "ok: status.json is 600" || { echo "FAIL: status.json perms $(perms_of "$status_file")"; FAIL=1; }
 rm -rf "$home"
 
 echo "--- no rate limits (non-subscriber) ---"

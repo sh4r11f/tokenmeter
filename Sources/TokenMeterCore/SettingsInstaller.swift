@@ -98,7 +98,13 @@ public struct SettingsInstaller {
     private func writeStatuslineScript(_ contents: String) throws {
         let scriptURL = URL(fileURLWithPath: statuslineScriptPath)
         do {
-            try FileManager.default.createDirectory(at: scriptURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+            // Owner-only directory: it also stores settings.json backups,
+            // which can contain secrets (env vars, API key helpers).
+            try FileManager.default.createDirectory(
+                at: scriptURL.deletingLastPathComponent(),
+                withIntermediateDirectories: true,
+                attributes: [.posixPermissions: 0o700]
+            )
             try contents.write(to: scriptURL, atomically: true, encoding: .utf8)
             try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: scriptURL.path)
         } catch {
@@ -137,11 +143,18 @@ public struct SettingsInstaller {
         let resolved = settingsFileURL.resolvingSymlinksInPath()
         guard FileManager.default.fileExists(atPath: resolved.path) else { return }
         do {
-            try FileManager.default.createDirectory(at: backupDirURL, withIntermediateDirectories: true)
+            try FileManager.default.createDirectory(
+                at: backupDirURL,
+                withIntermediateDirectories: true,
+                attributes: [.posixPermissions: 0o700]
+            )
             let timestamp = ISO8601DateFormatter().string(from: now()).replacingOccurrences(of: ":", with: "-")
             let backupURL = backupDirURL.appendingPathComponent("settings.json.bak-\(timestamp)")
             let data = try Data(contentsOf: resolved)
             try data.write(to: backupURL, options: .atomic)
+            // The backup is a verbatim settings.json copy and can contain
+            // secrets — never leave it group/world readable.
+            try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: backupURL.path)
         } catch {
             throw InstallerError.settingsUnwritable(backupDirURL.path)
         }

@@ -6,6 +6,27 @@ on:
   pull_request:
 
 jobs:
+  # Linux: shared statusline hook, installer merge logic, and the GNOME
+  # extension (schema, metadata, and shell-independent unit tests).
+  linux-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq gjs libglib2.0-bin
+
+      - name: Statusline shell tests
+        run: ./scripts/test-statusline.sh
+
+      - name: Installer tests
+        run: ./linux/test-install.sh
+
+      - name: Extension tests
+        run: ./linux/test-extension.sh
+
   build-and-test:
     runs-on: macos-15
     steps:

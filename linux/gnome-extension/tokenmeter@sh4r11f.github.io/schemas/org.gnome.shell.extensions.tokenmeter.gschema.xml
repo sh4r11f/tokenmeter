@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <!-- Settings for the TokenMeter GNOME Shell extension. One key: which
+       rate-limit window the compact top-bar label shows. Mirrors the mac
+       app's LabelMetric (fiveHour / sevenDay / mostUrgent). -->
+  <schema id="org.gnome.shell.extensions.tokenmeter"
+          path="/org/gnome/shell/extensions/tokenmeter/">
+    <key name="label-metric" type="s">
+      <choices>
+        <choice value="five-hour"/>
+        <choice value="seven-day"/>
+        <choice value="most-urgent"/>
+      </choices>
+      <default>'five-hour'</default>
+      <summary>Top bar label metric</summary>
+      <description>
+        Which rate-limit window drives the compact top-bar label: the
+        5-hour session window, the 7-day weekly window, or whichever of
+        the two currently has the higher used percentage.
+      </description>
+    </key>
+  </schema>
+</schemalist>
